@@ -1,10 +1,8 @@
 package name.zeno.ktrxpermission
 
-import android.annotation.TargetApi
 import android.app.Activity
 import android.app.Fragment
 import android.app.FragmentManager
-import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.JELLY_BEAN_MR1
 import io.reactivex.Observable
@@ -36,27 +34,29 @@ class RxPermissions(fragmentManager: FragmentManager) {
     return fragment
   }
 
-  fun request(vararg permissions: String): Observable<Boolean> {
-    if (permissions.isEmpty()) {
-      throw IllegalArgumentException("RxPermissions.request/requestEach requires at least one input permission")
-    }
-
-
-    return Observable.just(TRIGGER)
-        .mergeWith(pending(*permissions))
-        .flatMap { requestImplementation(*permissions) }
-        .buffer(permissions.size)
-        .flatMap({ results ->
-          if (results.isEmpty()) {
-            // Occurs during orientation change, when the subject receives onComplete.
-            // In that case we don't want to propagate that empty list to the
-            // subscriber, only the onComplete.
-            Observable.empty<Boolean>()
-          } else {
-            Observable.just(results.all { it.granted })
-          }
-        })
-  }
+  fun request(
+      vararg permissions: String,
+      rational: ((permission: String) -> String?)? = null
+  ): Observable<Boolean> = Observable.just(TRIGGER)
+      .mergeWith(pending(*permissions))
+      .flatMap {
+        if (permissions.isEmpty()) {
+          error("RxPermissions.request/requestEach requires at least one input permission")
+        }
+        requestImplementation(*permissions, rational = rational)
+      }
+      .buffer(permissions.size)
+      .flatMap({ results ->
+        if (results.isEmpty()) {
+          // 屏幕旋转时重现
+          // Occurs during orientation change, when the subject receives onComplete.
+          // In that case we don't want to propagate that empty list to the
+          // subscriber, only the onComplete.
+          Observable.empty<Boolean>()
+        } else {
+          Observable.just(results.all { it.granted })
+        }
+      })
 
   private fun pending(vararg permissions: String): Observable<Any> {
     // 没有正在请求的权限
@@ -67,10 +67,12 @@ class RxPermissions(fragmentManager: FragmentManager) {
     }
   }
 
-  @TargetApi(Build.VERSION_CODES.M)
-  private fun requestImplementation(vararg permissions: String): Observable<Permission> {
+  private fun requestImplementation(
+      vararg permissions: String,
+      rational: ((permission: String) -> String?)? = null
+  ): Observable<Permission> {
     val observables = ArrayList<Observable<Permission>>(permissions.size)
-    val unrequestedPermissions = ArrayList<String>()
+    val ungranted = ArrayList<String>()
 
     // In case of multiple permissions, we create an Observable for each of them.
     // At the end, the observables are combined to have a unique response.
@@ -86,11 +88,11 @@ class RxPermissions(fragmentManager: FragmentManager) {
         fragment.isRevoked(permission) -> observables.add(Observable.just(Permission(permission, false)))
         else -> {
           // 需要用户授权
-          val subject: PublishSubject<Permission> = when {
-            permission in fragment -> fragment[permission]!!
+          val subject: PublishSubject<Permission> = when (permission) {
+            in fragment -> fragment[permission]!!
             else -> {
               // Create a new subject if not exists
-              unrequestedPermissions.add(permission)
+              ungranted.add(permission)
               fragment[permission] = PublishSubject.create<Permission>()
               fragment[permission]!!
             }
@@ -98,12 +100,10 @@ class RxPermissions(fragmentManager: FragmentManager) {
           observables.add(subject)
         }
       }
-
     }
 
-    if (unrequestedPermissions.isNotEmpty()) {
-      val unrequestedPermissionsArray = unrequestedPermissions.toTypedArray()
-      fragment.requestPermissions(unrequestedPermissionsArray)
+    if (ungranted.isNotEmpty()) {
+      fragment.requestPermissions(ungranted.toTypedArray(), rational = rational)
     }
     return Observable.concat(observables)
   }

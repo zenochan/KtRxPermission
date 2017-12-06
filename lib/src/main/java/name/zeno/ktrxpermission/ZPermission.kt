@@ -64,4 +64,40 @@ object ZPermission {
   const val WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE
 
   fun granted(context: Context, vararg permissions: String) = context.isPermissionGranted(*permissions)
+
+  fun groupName(permission: String) = when (permission) {
+    READ_CALENDER,
+    WRITE_CALENDER -> "日历"
+
+    CAMERA -> "相机"
+
+    READ_CONTACTS,
+    WRITE_CONTACTS,
+    GET_CONTACTS -> "联系人"
+
+    ACCESS_COARSE_LOCATION,
+    ACCESS_FINE_LOCATION -> "位置"
+
+    RECORD_AUDIO -> "麦克风"
+
+    READ_PHONE_STATE,
+    CALL_PHONE,
+    READ_CALL_LOG,
+    WRITE_CALL_LOG,
+    ADD_VOICEMAIL,
+    USE_SIP,
+    PROCESS_OUTGOING_CALLS -> "电话"
+
+    BODY_SENSORS -> "传感器"
+
+    SEND_SMS, RECEIVE_SMS,
+    READ_SMS,
+    RECEIVE_WAP_PUSH,
+    RECEIVE_MMS -> "短信"
+
+    READ_EXTERNAL_STORAGE,
+    WRITE_EXTERNAL_STORAGE -> "存储"
+
+    else -> "其他"
+  }
 }

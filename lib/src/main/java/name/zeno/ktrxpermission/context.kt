@@ -13,10 +13,10 @@ import android.content.pm.PackageManager
  */
 val Context.appName: String
   get() {
-    try {
+    return try {
       val appInfo = packageManager.getApplicationInfo(packageName, 0)
-      return packageManager.getApplicationLabel(appInfo) as String
+      packageManager.getApplicationLabel(appInfo) as String
     } catch (e: PackageManager.NameNotFoundException) {
-      return "App"
+      "App"
     }
   }

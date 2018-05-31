@@ -29,12 +29,12 @@ val marshmallow = SDK_INT >= M
 fun Activity.rxPermissions(
     vararg permissions: String,
     rational: ((permission: String) -> String?)? = null
-): Single<Boolean> = RxPermissions(this).request(*permissions, rational = rational).singleOrError()
+): Observable<Boolean> = RxPermissions(this).request(*permissions, rational = rational)
 
 fun Fragment.rxPermissions(
     vararg permissions: String,
     rational: ((permission: String) -> String?)? = null
-): Single<Boolean> = Observable.create<Boolean> { e ->
+): Observable<Boolean> = Observable.create<Boolean> { e ->
   // 确保在正确的周期执行请求
   if (isResumed) {
     e.onNext(true)
@@ -59,7 +59,7 @@ fun Fragment.rxPermissions(
   }
 }.flatMap {
   RxPermissions(this).request(*permissions, rational = rational)
-}.singleOrError()
+}
 
 
 /**

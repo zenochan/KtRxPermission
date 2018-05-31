@@ -12,6 +12,11 @@ Kotlin Rx Permission
 
 #### usage
 
+```groovy
+mavan { url "http://maven.mjtown.cn/"}
+implementation "name.zeno:KtRxPermissions:0.0.2.20180531"
+```
+
 ```kotlin
 rxPermissions(
     ZPermission.ACCESS_COARSE_LOCATION,

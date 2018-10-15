@@ -1,9 +1,8 @@
 package name.zeno.ktrxpermission.demo
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import name.zeno.ktrxpermission.ZPermission
 import name.zeno.ktrxpermission.rxPermissions
@@ -13,7 +12,7 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    btn.setOnClickListener({
+    btn.setOnClickListener {
       rxPermissions(
           ZPermission.ACCESS_COARSE_LOCATION,
           ZPermission.ACCESS_FINE_LOCATION,
@@ -32,6 +31,6 @@ class MainActivity : AppCompatActivity() {
           Toast.makeText(this, "已授权", Toast.LENGTH_SHORT).show()
         }
       }
-    })
+    }
   }
 }

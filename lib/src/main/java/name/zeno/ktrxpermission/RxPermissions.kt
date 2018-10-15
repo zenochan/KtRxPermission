@@ -79,12 +79,12 @@ class RxPermissions(fragmentManager: FragmentManager) {
     // 多个权限申请，为每个权限创建一个 Observable， 最后，observables 组合成响应序列
     permissions.forEach { permission ->
       when {
-      // Already granted, or not Android M
-      // Return a granted Permission object.
-      // 已经授权，获取系统低于 Android M，添加到已授权权限列表
+        // Already granted, or not Android M
+        // Return a granted Permission object.
+        // 已经授权，获取系统低于 Android M，添加到已授权权限列表
         fragment.isGranted(permission) -> observables.add(Observable.just(Permission(permission, true)))
-      // Revoked by a policy, return a denied Permission object.
-      // 被策略撤销权限
+        // Revoked by a policy, return a denied Permission object.
+        // 被策略撤销权限
         fragment.isRevoked(permission) -> observables.add(Observable.just(Permission(permission, false)))
         else -> {
           // 需要用户授权

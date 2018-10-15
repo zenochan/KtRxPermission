@@ -1,23 +1,18 @@
 # KtRxPermission
-> 参考自 [RxPermissions](https://github.com/tbruyelle/RxPermissions)  
-> 在其基础上添加了“不再询问”的权限获取  
-> 并选用 kotlin 实现
+> 扩展 [RxPermissions](https://github.com/tbruyelle/RxPermissions)
 
-#### dependencies
-
-| -             | lib                   |   version |
-|---            |---                    |---        |
-|implementation | appcompat-v7          | 27.0.2    |
-| api           | kotlin-stdlib-jre7    | 1.2.0     |
-| api           | rxjava                | 2.1.7     |
-
+#### FEATURES
+- [x] 使用 kotlin 实现
+- [x] 添加“不再询问”的权限获取
+- [x] 已迁移至 AndroidX (2018年10月15日)
 
 #### usage
 
 ```groovy
 mavan { url "http://maven.mjtown.cn/"}
-implementation "name.zeno:kt-rx-permissions:1.0.1806111"
+implementation "name.zeno:kt-rx-permission:$latest_version"
 ```
+[latest_version](https://github.com/zenochan/KtRxPermission/releases)
 
 ```kotlin
 rxPermissions(
@@ -41,3 +36,8 @@ rxPermissions(
 }
 ```
 
+
+## CHANGE LOG
+
+#### 2.0.1810150
+- 迁移至 AndroidX

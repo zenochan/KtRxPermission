@@ -3,8 +3,8 @@ package name.zeno.ktrxpermission.lifecycle
 import android.app.Fragment
 import android.content.Intent
 import android.os.Bundle
-import android.support.annotation.CallSuper
 import android.view.View
+import androidx.annotation.CallSuper
 
 /**
  * @author 陈治谋 (513500085@qq.com)

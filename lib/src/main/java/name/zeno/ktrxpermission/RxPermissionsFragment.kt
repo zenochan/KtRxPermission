@@ -10,8 +10,8 @@ import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.JELLY_BEAN_MR1
 import android.os.Bundle
 import android.provider.Settings
-import android.support.v7.app.AlertDialog
 import android.text.Html
+import androidx.appcompat.app.AlertDialog
 import io.reactivex.subjects.PublishSubject
 import java.util.*
 import kotlin.collections.ArrayList

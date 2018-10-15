@@ -9,15 +9,13 @@ import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.M
 import android.os.Build.VERSION_CODES.O
-import android.support.v4.app.FragmentActivity
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import io.reactivex.Observable
-import io.reactivex.Single
 import name.zeno.ktrxpermission.lifecycle.LifecycleFragment
 import name.zeno.ktrxpermission.lifecycle.LifecycleListener
 import name.zeno.ktrxpermission.lifecycle.LifecycleObservable
 import name.zeno.ktrxpermission.lifecycle.SupportLifecycleFragment
-import android.support.v4.app.Fragment as SupportFragment
 
 val marshmallow = SDK_INT >= M
 

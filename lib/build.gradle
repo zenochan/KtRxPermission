@@ -2,14 +2,14 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-apply from: 'http://maven.mjtown.cn/maven.gradle'
+apply from: 'http://maven.izeno.cn/maven.gradle'
 mavenConf {
   groupId "name.zeno"
   artifactId "kt-rx-permission"
-  version "2.0.1810150"
+  version "2.0.1902130"
 
-  repositoryUrl "file:///Users/zenochan/.m2/repository"
-//  repositoryUrl "scp://root@mjtown.cn/root/nginx/maven"
+//  repositoryUrl "file:///Users/zenochan/.m2/repository"
+  repositoryUrl "scp://root@izeno.cn/root/nginx/maven"
 }
 confMaven()
 
@@ -34,7 +34,7 @@ android {
 }
 
 dependencies {
-  implementation "androidx.appcompat:appcompat:1.0.0"
+  implementation "androidx.appcompat:appcompat:1.0.2"
   api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-  api "io.reactivex.rxjava2:rxjava:2.2.0"
+  api "io.reactivex.rxjava2:rxjava:2.2.5"
 }

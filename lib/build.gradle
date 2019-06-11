@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 
 apply from: 'http://maven.izeno.cn/maven.gradle'
 mavenConf {
-  groupId "name.zeno"
+  groupId "cn.izeno"
   artifactId "kt-rx-permission"
   version "2.0.1902130"
 
@@ -20,7 +20,8 @@ android {
     minSdkVersion 15
     targetSdkVersion target_sdk_version
     versionCode 1
-    versionName mavenConf.version
+//    versionName mavenConf.version
+    versionName "123"
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -36,5 +37,5 @@ android {
 dependencies {
   implementation "androidx.appcompat:appcompat:1.0.2"
   api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-  api "io.reactivex.rxjava2:rxjava:2.2.5"
+  api "io.reactivex.rxjava2:rxjava:2.2.9"
 }

@@ -1,10 +1,10 @@
 package cn.izeno.ktrxpermission.lifecycle
 
-import android.app.Fragment
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
+import androidx.fragment.app.Fragment
 
 /**
  * @author 陈治谋 (513500085@qq.com)

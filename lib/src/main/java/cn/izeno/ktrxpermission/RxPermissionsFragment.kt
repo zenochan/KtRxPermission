@@ -2,16 +2,14 @@ package cn.izeno.ktrxpermission
 
 import android.annotation.TargetApi
 import android.app.Activity
-import android.app.Fragment
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.os.Build.VERSION.SDK_INT
-import android.os.Build.VERSION_CODES.JELLY_BEAN_MR1
 import android.os.Bundle
 import android.provider.Settings
 import android.text.Html
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import io.reactivex.subjects.PublishSubject
 import java.util.*
 import kotlin.collections.ArrayList
@@ -29,13 +27,13 @@ internal class RxPermissionsFragment : Fragment() {
   // 当允许或拒绝权限申请时，从中移除
   private val mSubjects = HashMap<String, PublishSubject<Permission>>()
 
-  private val sharedPreferences by lazy { activity.getSharedPreferences(TAG, 0) }
+  private val sharedPreferences by lazy { requireActivity().getSharedPreferences(TAG, 0) }
   private var activityResult: ((ok: Boolean, data: Intent?) -> Unit)? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     // Cannot retain Fragment that is nested in other Fragment
-    if (SDK_INT < JELLY_BEAN_MR1 || parentFragment == null) {
+    if (parentFragment == null) {
       retainInstance = true
     }
   }
@@ -80,7 +78,7 @@ internal class RxPermissionsFragment : Fragment() {
     val msgs = ArrayList<String>()
 
     var msg: String
-    val appName = activity.appName
+    val appName = requireActivity().appName
     var groupName: String
     permissions.forEach {
       groupName = ZPermission.groupName(it)
@@ -99,9 +97,9 @@ internal class RxPermissionsFragment : Fragment() {
         next()
       } else {
         activityResult = { _, _ -> next() }
-        val uri = Uri.parse("package:" + activity.packageName)
+        val uri = Uri.parse("package:" + requireActivity().packageName)
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, uri)
-        if (intent.resolveActivity(activity.packageManager) != null) {
+        if (intent.resolveActivity(requireActivity().packageManager) != null) {
           startActivityForResult(intent, 1)
         }
       }
@@ -109,7 +107,7 @@ internal class RxPermissionsFragment : Fragment() {
   }
 
   private fun confirm(msg: CharSequence, next: (ok: Boolean) -> Unit) {
-    AlertDialog.Builder(activity)
+    AlertDialog.Builder(requireContext())
         .setTitle("权限申请")
         .setMessage(msg)
         .setPositiveButton("去设置", { _, _ -> next(true) })
@@ -151,10 +149,10 @@ internal class RxPermissionsFragment : Fragment() {
     }
   }
 
-  internal fun isGranted(permission: String): Boolean = activity.isPermissionGranted(permission)
+  internal fun isGranted(permission: String): Boolean = requireActivity().isPermissionGranted(permission)
 
   @TargetApi(Build.VERSION_CODES.M)
-  internal fun isRevoked(permission: String): Boolean = activity.isPermissionRevoked(permission)
+  internal fun isRevoked(permission: String): Boolean = requireActivity().isPermissionRevoked(permission)
 
   operator fun get(permission: String): PublishSubject<Permission>? = mSubjects[permission]
   operator fun contains(permission: String): Boolean = mSubjects.containsKey(permission)

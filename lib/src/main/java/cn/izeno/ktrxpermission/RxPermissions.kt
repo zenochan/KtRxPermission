@@ -1,21 +1,16 @@
 package cn.izeno.ktrxpermission
 
-import android.app.Activity
-import android.app.Fragment
-import android.app.FragmentManager
-import android.os.Build.VERSION.SDK_INT
-import android.os.Build.VERSION_CODES.JELLY_BEAN_MR1
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import java.util.*
 
 class RxPermissions(fragmentManager: FragmentManager) {
 
-  constructor(activity: Activity) : this(activity.fragmentManager)
-  constructor(fragment: Fragment) : this(when {
-    SDK_INT > JELLY_BEAN_MR1 -> fragment.childFragmentManager
-    else -> fragment.fragmentManager
-  })
+  constructor(activity: FragmentActivity) : this(activity.supportFragmentManager)
+  constructor(fragment: Fragment) : this(fragment.requireFragmentManager())
 
   private var fragment: RxPermissionsFragment
 
@@ -62,7 +57,7 @@ class RxPermissions(fragmentManager: FragmentManager) {
     // 没有正在请求的权限
     val nonePermissionRequest = permissions.none { it in fragment }
     return when {
-      nonePermissionRequest -> Observable.empty<Any>()
+      nonePermissionRequest -> Observable.empty()
       else -> Observable.just(TRIGGER)
     }
   }

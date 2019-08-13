@@ -6,7 +6,7 @@ apply from: 'http://maven.izeno.cn/maven.gradle'
 mavenConf {
   groupId "cn.izeno"
   artifactId "kt-rx-permission"
-  version "2.0.1902130"
+  version "2.1.0-SNAPSHOT"
 
 //  repositoryUrl "file:///Users/zenochan/.m2/repository"
   repositoryUrl "scp://root@izeno.cn/root/nginx/maven"
@@ -17,7 +17,7 @@ android {
   compileSdkVersion compile_sdk_version
 
   defaultConfig {
-    minSdkVersion 15
+    minSdkVersion min_sdk_version
     targetSdkVersion target_sdk_version
     versionCode 1
 //    versionName mavenConf.version

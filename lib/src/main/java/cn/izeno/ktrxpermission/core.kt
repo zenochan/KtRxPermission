@@ -1,8 +1,6 @@
 package cn.izeno.ktrxpermission
 
 import android.annotation.TargetApi
-import android.app.Activity
-import android.app.Fragment
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -10,12 +8,13 @@ import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.M
 import android.os.Build.VERSION_CODES.O
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import io.reactivex.Observable
 import cn.izeno.ktrxpermission.lifecycle.LifecycleFragment
 import cn.izeno.ktrxpermission.lifecycle.LifecycleListener
 import cn.izeno.ktrxpermission.lifecycle.LifecycleObservable
 import cn.izeno.ktrxpermission.lifecycle.SupportLifecycleFragment
+import io.reactivex.Observable
 
 val marshmallow = SDK_INT >= M
 
@@ -24,7 +23,7 @@ val marshmallow = SDK_INT >= M
  * 周期安全
  * - 在 [Activity.onPause] 之后调用，会在 [Activity.onResume] 执行权限请求
  */
-fun Activity.rxPermissions(
+fun FragmentActivity.rxPermissions(
     vararg permissions: String,
     rational: ((permission: String) -> String?)? = null
 ): Observable<Boolean> = RxPermissions(this).request(*permissions, rational = rational)
@@ -42,7 +41,7 @@ fun Fragment.rxPermissions(
       this is LifecycleObservable -> this
       SDK_INT < O -> lifecycleObservable()
       else -> {
-        (activity as? FragmentActivity)?.supportLifecycleObservable()
+        activity?.supportLifecycleObservable()
             ?: throw error("you can't request permission before onResume() or after onPaused()")
       }
     }
@@ -76,10 +75,11 @@ fun Context.isPermissionGranted(vararg permissions: String) = permissions.all {
 
 private fun Fragment.lifecycleObservable(): LifecycleObservable {
   val tag = LifecycleFragment.TAG
-  var fragment: LifecycleObservable? = fragmentManager.findFragmentByTag(tag) as? LifecycleObservable
+  val fm = requireFragmentManager()
+  var fragment: LifecycleObservable? = fm.findFragmentByTag(tag) as? LifecycleObservable
   if (fragment == null) {
     fragment = LifecycleFragment()
-    fragmentManager.beginTransaction().add(fragment, tag).commit()
+    fm.beginTransaction().add(fragment, tag).commit()
   }
 
   return fragment

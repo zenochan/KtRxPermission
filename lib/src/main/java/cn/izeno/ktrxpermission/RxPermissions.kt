@@ -3,9 +3,8 @@ package cn.izeno.ktrxpermission
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
-import java.util.*
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 class RxPermissions(fragmentManager: FragmentManager) {
 
@@ -41,7 +40,7 @@ class RxPermissions(fragmentManager: FragmentManager) {
         requestImplementation(*permissions, rational = rational)
       }
       .buffer(permissions.size)
-      .flatMap({ results ->
+      .flatMap { results ->
         if (results.isEmpty()) {
           // 屏幕旋转时重现
           // Occurs during orientation change, when the subject receives onComplete.
@@ -51,7 +50,7 @@ class RxPermissions(fragmentManager: FragmentManager) {
         } else {
           Observable.just(results.all { it.granted })
         }
-      })
+      }
 
   private fun pending(vararg permissions: String): Observable<Any> {
     // 没有正在请求的权限
@@ -104,7 +103,7 @@ class RxPermissions(fragmentManager: FragmentManager) {
   }
 
   companion object {
-    const internal val TAG = "name.zeno.ktrxpermission.RxPermissions"
+    internal const val TAG = "name.zeno.ktrxpermission.RxPermissions"
     internal val TRIGGER = Any()
   }
 }

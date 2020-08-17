@@ -14,7 +14,7 @@ import cn.izeno.ktrxpermission.lifecycle.LifecycleFragment
 import cn.izeno.ktrxpermission.lifecycle.LifecycleListener
 import cn.izeno.ktrxpermission.lifecycle.LifecycleObservable
 import cn.izeno.ktrxpermission.lifecycle.SupportLifecycleFragment
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 
 val marshmallow = SDK_INT >= M
 

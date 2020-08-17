@@ -2,16 +2,33 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-apply from: 'http://maven.izeno.cn/maven.gradle'
-mavenConf {
-  groupId "cn.izeno"
-  artifactId "kt-rx-permission"
-  version "2.1.0-SNAPSHOT"
+def version_name = '3.0.0';
+def calendar = Calendar.getInstance()
+def version_code = String.format("%d%02d%02d",
+    calendar.get(Calendar.YEAR),
+    calendar.get(Calendar.MONTH) + 1,
+    calendar.get(Calendar.DAY_OF_MONTH))
+    .toInteger()
 
-//  repositoryUrl "file:///Users/zenochan/.m2/repository"
-  repositoryUrl "scp://root@izeno.cn/root/nginx/maven"
+apply plugin: 'maven'
+configurations { deployerJars }
+dependencies { deployerJars "org.apache.maven.wagon:wagon-ssh:3.4.1" }
+uploadArchives {
+  repositories.mavenDeployer {
+    configuration = configurations.deployerJars
+    repository(url: "scp://maven.izeno.cn/usr/local/wwwroot/maven.izeno.cn")
+    pom.project {
+      groupId "cn.izeno"
+      artifactId "kt-rx-permission"
+      version version_name
+    }
+  }
 }
-confMaven()
+task androidSourcesJar(type: Jar) {
+  classifier = 'sources'
+  from android.sourceSets.main.java.sourceFiles
+}
+artifacts { archives androidSourcesJar }
 
 android {
   compileSdkVersion compile_sdk_version
@@ -19,9 +36,8 @@ android {
   defaultConfig {
     minSdkVersion min_sdk_version
     targetSdkVersion target_sdk_version
-    versionCode 1
-//    versionName mavenConf.version
-    versionName "123"
+    versionCode version_code
+    versionName version_name
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -32,10 +48,15 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 }
 
 dependencies {
-  implementation "androidx.appcompat:appcompat:1.0.2"
+  implementation "androidx.appcompat:appcompat:1.2.0"
   api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-  api "io.reactivex.rxjava2:rxjava:2.2.9"
+  api "io.reactivex.rxjava3:rxjava:3.0.5"
 }

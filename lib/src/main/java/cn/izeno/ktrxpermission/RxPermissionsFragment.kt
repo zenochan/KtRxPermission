@@ -10,8 +10,7 @@ import android.provider.Settings
 import android.text.Html
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import io.reactivex.subjects.PublishSubject
-import java.util.*
+import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlin.collections.ArrayList
 
 /**
@@ -110,8 +109,8 @@ internal class RxPermissionsFragment : Fragment() {
     AlertDialog.Builder(requireContext())
         .setTitle("权限申请")
         .setMessage(msg)
-        .setPositiveButton("去设置", { _, _ -> next(true) })
-        .setNegativeButton("取消", { _, _ -> next(false) })
+        .setPositiveButton("去设置") { _, _ -> next(true) }
+        .setNegativeButton("取消") { _, _ -> next(false) }
         .setCancelable(false)
         .create()
         .show()
@@ -158,11 +157,11 @@ internal class RxPermissionsFragment : Fragment() {
   operator fun contains(permission: String): Boolean = mSubjects.containsKey(permission)
 
   operator fun set(permission: String, subject: PublishSubject<Permission>) {
-    mSubjects.put(permission, subject)
+    mSubjects[permission] = subject
   }
 
   companion object {
     const val TAG = "name.zeno.ktrxpermission.RxPermissionsFragment"
-    const private val PERMISSIONS_REQUEST_CODE = 42
+    private const val PERMISSIONS_REQUEST_CODE = 42
   }
 }
